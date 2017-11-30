@@ -1,8 +1,6 @@
 #include <stdio.h> 
 #include <stdlib.h> 
 
-
-
 #ifdef _MSC_VER 
 #include <Windows.h> 
 #endif 
@@ -160,24 +158,26 @@ int consider(int set) {
 
 //結果表示
 int result() {
-	int i, j, b = 0, w = 0;
+	int i, j, b = 0, w = 0, n_num = 0;
 	int f = 0;
 	//コマを数え上げる
 	for (i = 0; i < LEN; ++i) {
 		for (j = 0; j < LEN; ++j) {
 			switch (field[i][j]) {
 			case BLACK:
-				++b;
+				b++;
 				break;
 			case WHITE:
-				++w;
+				w++;
 				break;
+			case NONE:
+				n_num++;
 			default:
 				break;
 			}
 		}
 	}
-	if (b == 0 || w == 0) {
+	if (b == 0 || w == 0 || n_num == 0) {
 		f = 1;
 		//最後に盤面表示
 		printf("\n\n\n\n");
@@ -189,6 +189,9 @@ int result() {
 		else printf("Drawn Game.");
 		Sleep(5000);
 	}
+	else {
+		printf("WHITE('%c'): %d    BLACK('%c'): %d\n\n",WHITE,w,BLACK,b);
+	}
 	return  f;
 }
 
@@ -196,7 +199,7 @@ int main(void) {
 
 	
 	int x = 0, y = 0;
-	int n_num , p_num;
+	int p_num;
 
 
 	//スタート画面表示
@@ -220,7 +223,7 @@ int main(void) {
 	
 	//ゲームループ
 	while (1) {
-		n_num = 0;
+		
 		printf("\n\n\n\n");
 
 		//1人プレイ
@@ -251,17 +254,9 @@ int main(void) {
 						printf("You Pass...");
 					}
 				}
-			
-		for (x = 0; x < LEN; x++) {
-			for (y = 0; y < LEN; y++) {
-				if (field[y][x] == NONE) {
-					n_num++;
-				}
-			}
-		}
 
 		//置けるところがなければループを抜ける
-		if (result() || n_num == 0  ) break;
+		if (result()) break;
 		turn = (turn + 1) % 2;
 
 	}
