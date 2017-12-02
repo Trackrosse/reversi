@@ -129,27 +129,41 @@ int put(int x, int y) {
 //field内の状況確認とCPUの動作 最も多く取れるところに置く
 int consider(int set) {
 	int n_put[LEN][LEN] = { 0 };
+	int n[LEN][LEN] = {
+		{0, 6, 2, 1, 1, 2, 6, 0},
+		{6, 6, 5, 4, 4, 5, 6, 6},
+		{2, 5, 2, 3, 3, 2, 5, 2},
+		{1, 4, 3, 3, 3, 3, 4, 1},
+		{1, 4, 3, 3, 3, 3, 4, 1},
+		{2, 5, 2, 3, 3, 2, 5, 2},
+		{6, 6, 5, 4, 4, 5, 6, 6},
+		{0, 6, 2, 1, 1, 2, 6, 0} };
 	int x,y,vec, max = 0;
-
-	for (x = 0; x < LEN; x++) {
-		for (y = 0; y < LEN; y++) {
-			if (field[y][x] == NONE) {
-				for (vec = 0; vec < 8; vec++) {
-					n_put[y][x] += check(x, y, vec);
+	for (int i = 0; i <= 6; i++) {
+		for (x = 0; x < LEN; x++) {
+			for (y = 0; y < LEN; y++) {
+				if (field[y][x] == NONE) {
+					if (n[y][x] == i) {
+						for (vec = 0; vec < 8; vec++) {
+							n_put[y][x] += check(x, y, vec);
+						}
+						if (n_put[y][x] > max) max = n_put[y][x];
+					}
 				}
-				if (n_put[y][x] > max) max = n_put[y][x];
 			}
 		}
-	}
-	if (max == 0)return max;
-	do {
-		x = rand() % 8;
-		y = rand() % 8;
-	} while (n_put[y][x] < max);
-	if (set) {
-		
-		max = put(x, y);
-		
+		if (max > 0) {
+			do {
+				x = rand() % 8;
+				y = rand() % 8;
+			} while (n_put[y][x] < max);
+			if (set) {
+
+				max = put(x, y);
+
+			}
+			return max;
+		}
 	}
 	return max;
 }
@@ -182,7 +196,7 @@ int result() {
 		//最後に盤面表示
 		printf("\n\n\n\n");
 		printfield();
-
+		printf("WHITE('%c'): %d    BLACK('%c'): %d\n\n", WHITE, w, BLACK, b);
 		//勝者を表示
 		if (b > w) printf("BLACK('%c') WINNER!!!!  WHITE('%c') LOSER...\n", BLACK, WHITE);
 		else if (b < w) printf("WHITE('%c') WINNER!!!! BLACK('%c') LOSER...\n", WHITE, BLACK);
